@@ -16,13 +16,13 @@ alwaysApply: false
 
 ## Onde modelar
 
-- **Gateways** expõem DTOs/tipos explícitos; na borda HTTP use **DTOs Nest** (`class-validator` / Swagger).
+- Expor DTOs/tipos explícitos; na borda HTTP use **DTOs Nest** (`class-validator` / Swagger).
 - **Não** empilhar `as` em cima de `unknown` só para moldar formato — use type guard ou validação na borda; veja `no-unknown-shape-type-assertions.mdc`.
 
 ## Exceção aceitável (estrutura fixa)
 
 Para repetir mapeamento de contrato (`RemoteContractDto` → `ContractSlice`), um **único** método privado que só faz `Number(...)`, `new Date(...)` e repasse de campos é aceitável: é **mapeamento estrutural** de contrato conhecido, não “validador” reutilizável genérico.
 
-## Domínio identifier / histórico
+## Linhas dinâmicas e slices correlatos
 
-Regras de linha `row.*`, `HistorySlice` e IDs: **`identifier-investor-search-mapping.mdc`**.
+Regras de `row.*`, `Record<string, unknown>` e IDs paralelos em slices: **`record-row-and-slice-mapping.mdc`**.
