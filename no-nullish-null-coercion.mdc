@@ -1,0 +1,13 @@
+---
+description: Proíbe o padrão ?? null — prefira tipos opcionais e valores ausentes sem normalizar para null
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# Sem `?? null`
+
+- **Não usar** `?? null` (nem equivalentes só para “transformar” `undefined` em `null`).
+- **Prefira**: propriedades opcionais (`?:`), omitir atribuição/`Map` sem entrada, `undefined`, ou ramificações explícitas quando o contrato exige outro formato.
+- **Evitar também** encadear normalização em massa (`campo ?? null`) só para compatibilidade visual com tipos `| null`; alinhe o tipo/DTO/OpenAPI ao que o domínio realmente expõe.
+
+Quando a camada HTTP ou um cliente legado **exige** `null` serializado, modele isso no limite da API (decorators/schema/DTO) em vez de espalhar `?? null` pelo domínio ou pelos application services.

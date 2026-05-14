@@ -1,0 +1,15 @@
+---
+description: Funções curtas com guard clauses — evitar condições compostas e parsers genéricos ilegíveis
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# Funções limpas (guard clauses)
+
+- **Prefira** vários `if` com retorno imediato, um critério por vez: `if (!x) return [];`, depois o próximo caso, até o retorno final padrão.
+- **Evite** encadear muitas condições num único `if` (`a && b && c && d`) só para “economizar” linhas — isso dificulta leitura e diff.
+- **Evite** helpers estáticos genéricos do tipo “pega `unknown` e devolve `T[]`” só para ler `data.items` de uma resposta cuja forma **já é conhecida** — use retorno inline no método (ver `no-generic-http-response-unwrapping-helper.mdc`).
+- **Prefira não usar** `'…' in obj`, `Reflect.get` e `Array.isArray` para inspecionar formato de payload — se parecer necessário, **pergunte ao usuário** antes de implementar.
+- Quando precisar de vários passos de checagem, **um critério por bloco** (sem empilhar tudo numa linha só).
+
+Objetivo: leitura linear “se não serve, sai cedo; se serve, segue”. Para `PaginationDto` fixo da API, **não** monte cadeia de guards: use `response?.data?.items ?? []` no próprio caller.

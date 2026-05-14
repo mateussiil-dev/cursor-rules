@@ -1,0 +1,25 @@
+---
+description: Proíbe forçar formato de objetos desconhecidos com `as { ... }` em cima de unknown/any
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# Sem “inventar” formato com `as` em `unknown`
+
+- **Não usar** asserções do tipo `(valor as { items?: unknown }).items`, `(x as { items: T[] })`, ou encadeamentos equivalentes para “ensinar” ao TypeScript uma forma que ainda não foi validada em runtime.
+
+## O que fazer em vez disso (por ordem)
+
+1. **Validação na borda** (DTO + `class-validator`, schema, etc.) quando o payload vem de HTTP ou fila.
+2. **Contrato fixo e tipado** — acesso direto (ex.: `response?.data?.items ?? []`); ver `no-generic-http-response-unwrapping-helper.mdc`.
+3. **Type guard** com predicado quando fizer sentido.
+
+## Introspecção em runtime (`in`, `Reflect.get`, `Array.isArray`)
+
+- **Prefira não usar** `'…' in obj`, `Reflect.get` e `Array.isArray` para estreitar `unknown`, objetos soltos ou dentro de type guards — se parecer inevitável, **pergunte ao usuário** antes de implementar (inclui “type guard pesado” ou atalho só para o compilador).
+
+- **Evitar** `as any` seguido de acesso a propriedades só para calar o compilador no meio do domínio.
+
+Exceção estreita: em **genéricos** onde já se provou `Array.isArray` mas o compilador não infere `T[]`, um único `as T[]` no **retorno final** pode ser aceitável se documentado; ainda assim prefira type guard que retorne `T[]` após mapear/validar elemento a elemento quando o custo for aceitável.
+
+Quando o contrato HTTP já é **fixo** (ex.: paginação com `items`), prefira acesso direto (`response?.data?.items ?? []`) em vez de `unknown` + asserção — ver `no-generic-http-response-unwrapping-helper.mdc`.

@@ -1,0 +1,19 @@
+---
+description: Não criar helper genérico para desempacotar resposta HTTP quando o contrato já é óbvio (ex. PaginationDto.items)
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# Sem função “mirabolante” só para `.items`
+
+Quando a API documentada devolve um formato **fixo e conhecido** (ex.: `PaginationDto` com `items`, ou o próprio array no `data`):
+
+- **Retorne no próprio método** com uma linha explícita, por exemplo: `return response?.data?.items ?? [];` ou `return response?.data?.items || [];` conforme o time convencionar para lista vazia vs `undefined`.
+- **Não extraia** para `private static pickPagedItems<T>(data: unknown)`, `unwrapItems`, `normalizePagedResponse` etc. só para inspecionar `unknown` em runtime (incluindo type guard genérico cheio de introspecção) — isso **aumenta indireção** sem ganho quando o cliente HTTP já tipa ou o contrato do backend é estável. **Evite** `'…' in obj`, `Reflect.get` e `Array.isArray` para isso; se parecer inevitável, **pergunte ao usuário** antes.
+
+## Quando um helper faz sentido
+
+- O **mesmo** desempacotamento é repetido em **vários** adapters/serviços **e** existem **vários formatos** legítimos (ex.: versões diferentes da API) documentados num só lugar.
+- Há **validação** real (schema, DTO parse) e não só “achismo” de formato.
+
+Fora desses casos, prefira **código direto** no adapter.

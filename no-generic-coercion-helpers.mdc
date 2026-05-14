@@ -1,0 +1,28 @@
+---
+description: Proíbe helpers genéricos de coerção; gateways com DTOs; mapeamento estrutural de contrato permitido uma vez
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# Coerção de dados
+
+## O que não fazer
+
+**Não** criar no topo de arquivos (nem em `utils/` genéricos) funções de uma linha só para normalizar valores soltos, com nomes ou papel equivalente a:
+
+- `str()`, `toStr()`, `asString()`
+- `num()`, `toNum()`, `asNumber()`
+- `parse()`, `parseDate()`, `optionalCalendarDate()` / métodos privados só para “validar” datas vindas de API campo a campo
+
+## Onde modelar
+
+- **Gateways** expõem DTOs/tipos explícitos; na borda HTTP use **DTOs Nest** (`class-validator` / Swagger).
+- **Não** empilhar `as` em cima de `unknown` só para moldar formato — use type guard ou validação na borda; veja `no-unknown-shape-type-assertions.mdc`.
+
+## Exceção aceitável (estrutura fixa)
+
+Para repetir mapeamento de contrato (`RemoteContractDto` → `ContractSlice`), um **único** método privado que só faz `Number(...)`, `new Date(...)` e repasse de campos é aceitável: é **mapeamento estrutural** de contrato conhecido, não “validador” reutilizável genérico.
+
+## Domínio identifier / histórico
+
+Regras de linha `row.*`, `HistorySlice` e IDs: **`identifier-investor-search-mapping.mdc`**.

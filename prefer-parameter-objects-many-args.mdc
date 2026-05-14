@@ -1,0 +1,17 @@
+---
+description: Funções com mais de dois parâmetros preferem um único objeto de opções
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.py"]
+alwaysApply: false
+---
+
+# Parâmetros nomeados em objeto
+
+- Quando uma função/método tiver **mais de dois parâmetros**, prefira receber **um único argumento objeto** e desestruturar na assinatura (ex.: `async foo({ profileId, withinDays }: { profileId: string; withinDays: number })`).
+- **Benefício**: chamadas legíveis sem ordem frágil, extensão com novos campos opcionais sem quebrar assinatura.
+
+## Exceções (não forçar o padrão)
+
+- Assinaturas **impostas por framework ou biblioteca** (lifecycle NestJS, callbacks de driver, contratos de interface já definidos externamente).
+- Funções triviais de **1 argumento** ou **2 parâmetros** claros e estáveis (ex.: `(id: string, options?: Options)` pode permanecer se já for convenção do projeto para esse caso).
+
+Ao criar **nova** API interna (services, use cases, helpers privados), aplique o objeto quando passar de dois parâmetros.
