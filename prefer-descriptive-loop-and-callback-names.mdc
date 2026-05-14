@@ -1,0 +1,22 @@
+---
+description: Nomes de variáveis em laços devem refletir o domínio; evitar uma letra salvo x,y,z em contexto matemático
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# Nomes em laços e callbacks
+
+- Em **`for`**, **`for…of`**, **`map`**, **`filter`**, **`forEach`**, etc., **evite** identificadores de **uma letra** ou siglas opacas (`c`, `d`, `n`, `h`, `p`, `pr`, `res`, `ctr`, `idx`, `cid`) quando existir um substantivo claro do domínio.
+- **Prefira** nomes que digam o que o valor é: `contract`, `proposal`, `historyRow`, `contractsPage`, `endDate`, `paymentItem`, `contractId`, `index`, etc.
+- Em **parâmetros de função** e **variáveis locais** usados no corpo do laço, aplique o mesmo critério (legibilidade em code review e diff).
+
+## Exceção: laços matemáticos
+
+- **`x`**, **`y`**, **`z`** são aceitáveis quando o contexto é **explicitamente matemático** (coordenadas, matriz, grid, geometria, função sobre domínio numérico).
+- **Não** use `x`/`y` como variável “descartável” em `map`/`filter` de listas de negócio.
+
+Fora desse caso, mesmo contadores numéricos tendem a ficar mais claros como `index`, `rowIndex`, `page`, etc., quando o valor é usado no corpo (não só `i++` opaco).
+
+## Conflito com nomes externos
+
+- Se o nome desejado **sombrearia** um símbolo do escopo externo (ex.: parâmetro `profileId` do método vs `profileId` no `filter`), prefira um nome ainda descritivo com prefixo: `rowProfileId`, `pageContract`, etc., em vez de voltar a `x` ou `p`.

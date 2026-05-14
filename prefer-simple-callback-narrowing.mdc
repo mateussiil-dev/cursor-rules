@@ -1,0 +1,13 @@
+---
+description: Prefira callbacks simples em filter/map; evite type predicate (x is T) por padrão; se o TypeScript reclamar, pergunte ao usuário
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# Narrowing em `.filter` / callbacks
+
+- **Prefira** a checagem direta sem predicado explícito quando for suficiente, por exemplo:
+  - `.filter((id) => typeof id === 'string')` em vez de `.filter((id): id is string => typeof id === 'string')` só para “forçar” `string[]`.
+- **Não** assuma que todo `string | null | undefined` exige `x is string` — o custo cognitivo do predicado nem sempre compensa.
+
+Se o TypeScript **não** estreitar o tipo como esperado (erro em `Set`, `map` seguinte, etc.) e a correção natural for predicado elaborado, **`as` em massa** ou outra gambiarra, **pergunte ao usuário** antes de aplicar a mudança.
