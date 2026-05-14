@@ -1,0 +1,23 @@
+---
+description: Mapeamento direto de linhas dinâmicas (Record) e slices com IDs paralelos — sem normalização genérica nem ?? null em campos correlatos
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# Linhas dinâmicas e slices correlatos
+
+Vale para **qualquer** camada que monte objetos a partir de **linhas tabulares ou dinâmicas** (`Record<string, unknown>`, mapas de colunas, respostas “row”) e para **slices agregados** cujos campos vêm de **arrays percorridos em paralelo** .
+
+## Linha dinâmica (`Record<string, unknown>` ou equivalente)
+
+- Mapear campos **diretos** no objeto resultado (`row.nomeDaColuna`, etc., conforme o contrato da origem).
+- **Não** usar padrões do tipo `row.x === undefined || row.x === null ? null : String(row.x)` para opcionais — quando precisar alinhar ao TypeScript e o contrato na origem já for conhecido, use **`row.x as T`**.
+
+## IDs e propriedades paralelas em slices
+
+Quando o código junta **várias coleções pelo mesmo índice** (cada índice representa a mesma entidade lógica):
+
+- **Não** usar `campoId: id ?? null` só para “caber” em `| null` quando o paralelismo já garante o valor — preferir **`id as TipoDoSlice['campoId']`** (ou tipagem firme na resposta do gateway), coerente com o índice alinhado.
+- O padrão aplica-se a **qualquer** tipo de slice nessa forma, não a um nome de tipo específico.
+
+Para `null` vs ausência no contrato HTTP, veja `no-nullish-null-coercion.mdc`.
